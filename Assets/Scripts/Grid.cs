@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-public class Grid
+public class Grid<T>
 {
     private int width;
     private int height;
     private float cellSize;
     Vector3 originPosition;
-    private int[,] gridArray;
+    private T[,] gridArray;
     private TextMesh[,] gridTextArray;
     
     public Grid(int width, int height, float cellSize, Vector3 originPosition)
@@ -16,14 +16,14 @@ public class Grid
         this.cellSize = cellSize;
         this.originPosition = originPosition;
         
-        gridArray = new int[width, height];
+        gridArray = new T[width, height];
         gridTextArray = new TextMesh[width, height];
 
         for (var x = 0; x < gridArray.GetLength(0); x++)
         {
             for (var z = 0; z < gridArray.GetLength(1); z++)
             {
-                gridTextArray[x,z] = Utils.CreateWorldText(gridArray[x, z].ToString(), null, GetWorldPosition(x, 0, z) + new Vector3(cellSize, 0 , cellSize) * 0.5f, 9, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center);
+                gridTextArray[x,z] = Utils.CreateWorldText(gridArray[x, z].ToString(), null, GetWorldPosition(x, 0, z) + new Vector3(cellSize, 0 , cellSize) * 0.5f, 20, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center);
                 Debug.DrawLine(GetWorldPosition(x, 0, z), GetWorldPosition(x, 0, z + 1), Color.white, 1000f);
                 Debug.DrawLine(GetWorldPosition(x, 0, z), GetWorldPosition(x + 1, 0, z), Color.white, 1000f);
             }
@@ -59,7 +59,7 @@ public class Grid
         z = Mathf.FloorToInt((worldPosition - originPosition).z / cellSize);
     }
 
-    public void SetValue(int x, int z, int value)
+    public void SetValue(int x, int z, T value)
     {
         if (x >= 0 && z >= 0 && x < width && z < height)
         {
@@ -68,24 +68,24 @@ public class Grid
         }
     }
     
-    public void SetValue(Vector3 worldPosition, int value)
+    public void SetValue(Vector3 worldPosition, T value)
     {
         int x, z;
         GetXZ(worldPosition, out x, out z);
         SetValue(x, z, value);
     }
     
-    public int GetValue(int x, int z)
+    public T GetValue(int x, int z)
     {
         if (x >= 0 && z >= 0 && x < width && z < height)
         {
             return gridArray[x, z];
         }
         
-        return default(int);
+        return default(T);
     }
     
-    public int GetValue(Vector3 worldPosition)
+    public T GetValue(Vector3 worldPosition)
     {
         int x, z;
         GetXZ(worldPosition, out x, out z);
